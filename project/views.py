@@ -1,7 +1,7 @@
 import sqlite3
 from functools import wraps
 
-from flask import Flask, flash, redirect, render_template, 
+from flask import Flask, flash, redirect, render_template, \
 request, session, url_for
 
 # config
@@ -33,8 +33,8 @@ def logout():
 @app.route('/', methods=['GET', 'POST'])
 def login():
 	if request.method == 'POST':
-		if request.form['username'] != app.config['USERNAME']
-			or request.form['password'] != app.config['PASSWORD']:
+		if request.form['username'] != app.config['USERNAME'] or \
+		request.form['password'] != app.config['PASSWORD']:
 			error = 'Invalid Credentials. Please try again.'
 			return render_template('login.html', error=error)
 		else:
