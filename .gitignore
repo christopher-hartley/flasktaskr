@@ -1,5 +1,8 @@
 #python specific
+env
+venv
 *.pyc
+__pycache__
 
 ## generic files to ignore
 *~
