@@ -1,6 +1,7 @@
 import sqlite3
 from functools import wraps
 
+from forms import AddTaskForm
 from flask import Flask, flash, redirect, render_template, \
 request, session, url_for, g
 
@@ -10,7 +11,7 @@ app.config.from_object('_config')
 
 # helper functions
 
-def connect_df():
+def connect_db():
 	return sqlite3.connect(app.config['DATABASE'])
 
 def login_required(test):
@@ -21,7 +22,7 @@ def login_required(test):
 		else:
 			flash('You need to login first.')
 			return redirect(url_for('login'))
-		return wrap
+	return wrap
 
 # route handlers
 @app.route('/logout/')
@@ -60,7 +61,7 @@ def tasks():
 		'select name, due_date, priority, task_id from tasks where \
 		status=0'
 	)
-	closed_task = [
+	closed_tasks = [
 		dict(name=row[0], due_date=row[1], priority=row[2], 
 			task_id=row[3]) for row in cur.fetchall()
 	]
@@ -96,7 +97,7 @@ def new_task():
 		return redirect(url_for('tasks'))
 
 # Mark tasks as complete
-@app.route('/complete/<int:task_id')
+@app.route('/complete/<int:task_id>/')
 @login_required
 def complete(task_id):
 	g.db = connect_db()
@@ -109,9 +110,9 @@ def complete(task_id):
 	return redirect(url_for('tasks'))
 
 # Delete tasks
-@app.route('/delete/<int:task_id>')
+@app.route('/delete/<int:task_id>/')
 @login_required
-def delete_entry():
+def delete_entry(task_id):
 	g.db = connect_db()
 	g.db.execute('delete from tasks where task_id='+str(task_id))
 	g.db.commit()
