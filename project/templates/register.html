@@ -7,6 +7,8 @@
     {{ form.csrf_token }}
     <p>
       {{ form.name.label }}: {{ form.name }}
+      {% if form.name.errors %}
+        <span class="error">
       &nbsp;&nbsp;
       {{ form.email.label }}: {{ form.email }}
     </p>
