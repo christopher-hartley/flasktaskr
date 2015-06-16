@@ -29,6 +29,7 @@ def login_required(test):
 
 # route handlers
 @app.route('/logout/')
+@login_required
 def logout():
 	session.pop('logged_in', None)
 	session.pop('user_id', None)
@@ -124,7 +125,7 @@ def register():
 			try:
 				db.session.add(new_user)
 				db.session.commit()
-				flash('Thanks fo registering. Please login.')
+				flash('Thanks for registering. Please login.')
 				return redirect(url_for('login'))
 			except IntegrityError:
 				error = 'That username and/or email already exist.'
