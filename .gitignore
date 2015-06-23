@@ -3,6 +3,7 @@ env
 venv
 *.pyc
 __pycache__
+.coverage
 
 ## generic files to ignore
 *~
@@ -10,3 +11,4 @@ __pycache__
 *.DS_Store
 *.swp
 *.out
+htmlcov
