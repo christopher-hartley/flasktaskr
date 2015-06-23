@@ -96,9 +96,14 @@ def new_task():
 @login_required
 def complete(task_id):
 	new_id = task_id
-	db.session.query(Task).filter_by(task_id=new_id).update({"status":"0"})
-	db.session.commit()
-	flash('The task is complete. Nice.')
+	task = db.session.query(Task).filter_by(task_id=new_id)
+	if session['user_id'] == task.first().user_id:
+		task.update({"status":"0"})
+		db.session.commit()
+		flash('The task is complete. Nice.')
+		return redirect(url_for('tasks'))
+	else:
+		flash('You can only update tasks that belong to you.')
 	return redirect(url_for('tasks'))
 
 # Delete tasks
@@ -106,10 +111,15 @@ def complete(task_id):
 @login_required
 def delete_entry(task_id):
 	new_id = task_id
-	db.session.query(Task).filter_by(task_id=new_id).delete()
-	db.session.commit()
-	flash('The task was deleted, why not add a new one?')
-	return redirect(url_for('tasks'))
+	task=db.session.query(Task).filter_by(task_id=new_id)
+	if session['user_id'] == task.first().user_id:
+		task.delete()
+		db.session.commit()
+		flash('The task was deleted, why not add a new one?')
+		return redirect(url_for('tasks'))
+	else:
+		flash('You can only delete tasks that belong to you.')
+		return redirect(url_for('tasks'))
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
