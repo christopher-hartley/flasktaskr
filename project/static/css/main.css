@@ -1,6 +1,7 @@
 body {
 	font-family: sans-serif;
-	background: #eee;
+	padding: 60px 0;
+	background: #ffffff;
 }
 
 a, h1, h2 {
@@ -127,4 +128,13 @@ h2 {
 	margin: 0;
 	text-decoration:none;
 	position: relative;
+}
+
+.footer{
+	padding-top: 30px;
+}
+
+.error{
+	color:red;
+	font-size: .8em;
 }
