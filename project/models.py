@@ -1,4 +1,4 @@
-from views import db
+from users.views import db
 
 import datetime
 
