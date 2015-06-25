@@ -22,7 +22,7 @@ def login_required(test):
 			return test(*args, **kwargs)
 		else:
 			flash('You need to login first.')
-			return redirect(url_for('login'))
+			return redirect(url_for('users.login'))
 	return wrap
 
 def open_tasks():
@@ -38,10 +38,11 @@ def closed_tasks():
 @tasks_blueprint.route('/tasks/')
 @login_required
 def tasks():
-	return render_template('tasks.html', \
-		form=AddTaskForm(request.form), \
-		open_tasks=open_tasks(), \
-		closed_tasks=closed_tasks()
+	return render_template('tasks.html',
+		form=AddTaskForm(request.form),
+		open_tasks=open_tasks(),
+		closed_tasks=closed_tasks(),
+		username=session['name']
 	)
 
 @tasks_blueprint.route('/add/', methods=['GET', 'POST'])
@@ -62,7 +63,7 @@ def new_task():
 			db.session.add(new_task)
 			db.session.commit()
 			flash('New entry was successfully posted. Thanks.')
-			return redirect(url_for('tasks'))
+			return redirect(url_for('tasks.tasks'))
 	return render_template(
 		'tasks.html',
 		 form=form,
@@ -81,10 +82,10 @@ def complete(task_id):
 		task.update({"status":"0"})
 		db.session.commit()
 		flash('The task is complete. Nice.')
-		return redirect(url_for('tasks'))
+		return redirect(url_for('tasks.tasks'))
 	else:
 		flash('You can only update tasks that belong to you.')
-	return redirect(url_for('tasks'))
+	return redirect(url_for('tasks.tasks'))
 
 # Delete tasks
 @tasks_blueprint.route('/delete/<int:task_id>/')
@@ -96,7 +97,7 @@ def delete_entry(task_id):
 		task.delete()
 		db.session.commit()
 		flash('The task was deleted, why not add a new one?')
-		return redirect(url_for('tasks'))
+		return redirect(url_for('tasks.tasks'))
 	else:
 		flash('You can only delete tasks that belong to you.')
-		return redirect(url_for('tasks'))
+		return redirect(url_for('tasks.tasks'))

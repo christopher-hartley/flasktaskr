@@ -24,7 +24,7 @@ def login_required(test):
 			return test(*args, **kwargs)
 		else:
 			flash('You need to login first.')
-			return redirect(url_for('login'))
+			return redirect(url_for('users.login'))
 	return wrap
 
 # routes
@@ -35,8 +35,9 @@ def logout():
 	session.pop('logged_in', None)
 	session.pop('user_id', None)
 	session.pop('role', None)
+	session.pop('name', None)
 	flash('Goodbye!')
-	return redirect(url_for('login'))
+	return redirect(url_for('users.login'))
 
 @users_blueprint.route('/', methods=['GET', 'POST'])
 def login():
@@ -46,11 +47,12 @@ def login():
 		if form.validate_on_submit():
 			user = User.query.filter_by(name=request.form['name']).first()
 			if user is not None and user.password == request.form['password']:
+				session['name'] = user.name
 				session['logged_in'] = True
 				session['user_id'] = user.id
 				session['role'] = user.role
 				flash('Welcome')
-				return redirect(url_for('tasks'))
+				return redirect(url_for('tasks.tasks'))
 			else:
 				error = 'Invalid username or password.'
 	return render_template('login.html', form=form, error=error)
@@ -70,7 +72,7 @@ def register():
 				db.session.add(new_user)
 				db.session.commit()
 				flash('Thanks for registering. Please login.')
-				return redirect(url_for('login'))
+				return redirect(url_for('users.login'))
 			except IntegrityError:
 				error = 'That username and/or email already exist.'
 				return render_template('register.html', form=form, error=error)
