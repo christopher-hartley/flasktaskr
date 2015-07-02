@@ -38,19 +38,19 @@ class APITests(unittest.TestCase):
 				1
 			)
 		)
-	db.session.commit()
+		db.session.commit()
 
-	db.session.add(
-		Task(
-			"Purchase Real Python",
-			date(2016, 2, 23),
-			10,
-			date(2016, 2, 7),
-			1,
-			1
+		db.session.add(
+			Task(
+				"Purchase Real Python",
+				date(2016, 2, 23),
+				10,
+				date(2016, 2, 7),
+				1,
+				1
+			)
 		)
-	)
-	db.session.commit()
+		db.session.commit()
 
 	def test_collection_endpoint_returns_correct_data(self):
 		self.add_tasks()
